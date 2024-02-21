@@ -12,6 +12,7 @@ import { ViroARSceneNavigator } from "@viro-community/react-viro";
 import MapView, { Marker, Circle } from "react-native-maps";
 import Geolocation from "@react-native-community/geolocation";
 
+import {Platform } from 'react-native'
 const Stack = createStackNavigator()
 
 // Main App component
@@ -39,7 +40,11 @@ const App = () => {
   return (
     <NavigationContainer>
       <Stack.Navigator initialRouteName="Home"
-      screenOptions={{headerShown: false}}
+      screenOptions={{
+        headerTitle: "AR camera",
+        headerShown: false,
+        gestureEnabled: true,
+      }}
       >
 
       <Stack.Screen name="Home">
@@ -86,7 +91,24 @@ const App = () => {
     </View>
     )}
     </Stack.Screen>
-    <Stack.Screen name="CommentPage" component={CommentPage} />
+   
+    <Stack.Screen 
+    name="CommentPage" 
+    component={CommentPage}
+    options={{
+      ...Platform.select({
+        ios: {
+          headerShown: true,
+          headerTitle: "Add a review",
+          gestureEnabled: true,
+        },
+        android: {
+          headerShown: false, 
+          gestureEnabled: true,
+        }
+      })
+    }} />
+
     </Stack.Navigator>
     </NavigationContainer>
   );
