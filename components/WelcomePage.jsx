@@ -11,20 +11,22 @@ import { TouchableOpacity } from "react-native-gesture-handler"; //  TouchableOp
 
 const WelcomePage = ({ onStartAR, onFakeAR }) => {
   return (
-    <ImageBackground
-      source={require("../_media_/background-02.jpg")}
-      style={styles.backgroundImage}
-    >
-      <View style={styles.container}>
-        <Text style={styles.welcomeText}>Welcome Team-Six...</Text>
+    <View style={styles.container}>
+      <Text style={styles.welcomeText}>Welcome Team-Six...</Text>
+      <View style={styles.imageContainer}>
         <Image
           source={require("../_media_/review-ar-04.png")}
           style={styles.logoImage}
         />
-        <Button title="Start with Google-API!" onPress={onStartAR} color="black" />{/* Find a way to style buttons */ }
-        <Button title="Start with Own-API" onPress={onFakeAR} color="black" />
       </View>
-    </ImageBackground>
+      <Button
+        title="Start with Google-API!"
+        onPress={onStartAR}
+        color="black"
+      />
+      {/* Find a way to style buttons */}
+      <Button title="Start ReviewAR Demo" onPress={onFakeAR} color="black" />
+    </View>
   );
 };
 
@@ -47,8 +49,16 @@ const styles = StyleSheet.create({
     top: 20,
     left: 20,
   },
+  imageContainer: {
+    display: "flex",
+    justifyContent: "center",
+    flexBasis: 100,
+  },
   logoImage: {
-    marginTop: 60,
+    flex: 1,
+    width: 300,
+    height: 300,
+    resizeMode: 'contain'
   },
 });
 
