@@ -243,6 +243,15 @@ const ARScene2 = () => {
                     type="OBJ" // Assuming the star model is an OBJ file
                   />
                 )}
+
+                <ViroImage
+                  height={2}
+                  width={2}
+                  length={2}
+                  scale={[0.2, 0.2, 0.2]}
+                  position={[0, 0, -1]}
+                  source={require("../assets/ReviewStar.png")}
+                />
               </ViroFlexView>
               {parseInt(venue.average_star_rating) >= 2 && (
                 <ViroFlexView style={styles.avg2Star}>
