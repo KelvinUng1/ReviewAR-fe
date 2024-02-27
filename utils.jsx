@@ -52,6 +52,17 @@ export const fetchUsers = () => {
     .then((data) => data.users);
 };
 
+export const getReviewValue = (reviews, venue_id, property) => {
+  let propertyValue = ""
+  reviews.every(venueReviews => {
+    if(venueReviews[0].venue_id === venue_id){
+      propertyValue = venueReviews[0][property]
+      return false
+    }
+  })
+  return propertyValue
+}
+
 export const postReviews = (
   venue_id,
   user_id,

@@ -22,13 +22,16 @@ const ARScene2 = () => {
   const navigation = useNavigation();
   const [text, setText] = useState("Initializing AR...");
   const [position, setPosition] = useState(null);
-  const [radius, setRadius] = useState(30);
+  const [radius, setRadius] = useState(300);
   const [venues, setVenues] = useState([]);
   const [reviewIndex, setReviewIndex] = useState(0);
+  const [reviewIndexArr, setReviewIndexArr] = useState([])
   const [users, setUsers] = useState([]);
   const [reviews, setReviews] = useState([]);
   const [nearbyVenues, setNearbyVenues] = useState([]);
   const [selectedVenueId, setSelectedVenueId] = useState(null);
+  const [unfilteredReviews, setUnfilteredReviews] = useState([])
+
 
   //console.log(reviews)
 
@@ -87,35 +90,61 @@ const ARScene2 = () => {
   //     });
   // }, [selectedVenueId]);
 
+  // useEffect(() => {
+  //   setReviewIndexArr(reviewIndexArr => ({...reviewIndexArr, [i]: 1}))
+  // }, [nearbyVenues])
+
   useEffect(() => {
     const fetchVenueData = async () => {
       if (position) {
         const { latitude, longitude } = position;
         // Filter venue data based on proximity to current location
-        const nearbyVenues = venues.filter((venue) => {
+        if (venues){
+          const nearbyVenues = venues.filter((venue) => {
+  
+            if (venue.latitude && venue.longitude) {
+              const distance = calculateDistance(
+                latitude,
+                longitude,
+                venue.latitude,
+                venue.longitude
+              );
+  
+              return distance <= radius;
+            }
+            return false;
+          });
+          setNearbyVenues(nearbyVenues);
+          
+          console.log('Nearby >>> ', nearbyVenues);
 
-          if (venue.latitude && venue.longitude) {
-            const distance = calculateDistance(
-              latitude,
-              longitude,
-              venue.latitude,
-              venue.longitude
-            );
+        }
 
-            return distance <= radius;
-          }
-          return false;
-        });
-        setNearbyVenues(nearbyVenues);
-        console.log('Nearby >>> ', nearbyVenues);
-        fetchReviews(nearbyVenues[0].venue_id).then(({reviews}) => {
-          setReviews(reviews)
-           //console.log(reviews)
-
-        })
-        .catch(error => {
-          //error handling
-        })
+          //fetch reviews (can get duplicates and unordered)
+          nearbyVenues.forEach(venue => {
+            fetchReviews(venue.venue_id).then((res) => {
+              const newReviews = res.reviews
+              setUnfilteredReviews([...unfilteredReviews, newReviews])
+            })
+            .catch(error => {
+              //error handling
+            })
+          })
+          //algorithm that filters duplicate reviews
+          const item_order = nearbyVenues.map(p=>p.venue_id)
+          setReviews(
+            unfilteredReviews.filter((t={},a=>!(t[a]=a in t))).slice()
+            .sort((a, b) => {
+              var A = a[0].venue_id, B = b[0].venue_id;
+    
+              if (item_order.indexOf(A) > item_order.indexOf(B)) {
+                return 1;
+              } else {
+                return -1;
+              }
+            }
+              )
+          )  
       }
     };
     fetchVenueData();
@@ -162,6 +191,12 @@ const ARScene2 = () => {
       // const venueWithComments = reviews.find(
       //   (venue) => venue.venue_id === venueId
       // );
+      if (reviewIndexArr.length === 0){
+        for (let i = 0; i < nearbyVenues.length; i++) {
+          
+        }
+      }
+      setReviewIndexArr({...reviewIndexArr, 0 : 10})
       const commentsForVenue = reviews
       let nextIndex = reviewIndex + 1;
 
@@ -208,15 +243,18 @@ const ARScene2 = () => {
 
   return (
     <ViroARScene onTrackingUpdated={onInitialized}>
+      {console.log(reviews)}
+      {console.log(reviewIndexArr)}
       {nearbyVenues &&
         nearbyVenues.length > 0 &&
-        reviews.length > 0 &&
+        reviews.length === nearbyVenues.length &&
         nearbyVenues.map((venue, index) => (
 
             // THE MAIN REVIEW CARD CONTAINER
               <ViroFlexView
                 style={styles.venueInfoAndReviewsContainer}
                 key={index}
+                id={index}
                 position={[0, index * -4, -10]}
                 transformBehaviors={["billboard"]}
                 
@@ -244,7 +282,7 @@ const ARScene2 = () => {
           <ViroFlexView style={[getRatingStyle(venue)]}>
             <ViroText
             style={styles.displayedVenueAvgRatingBarText}
-            text={`Average Rating: ${venue.average_star_rating}, from ${reviews.length} Reviews`}
+            text={`Average Rating: ${venue.average_star_rating}, from ${reviews[index].length} Reviews`}
           
             />
           </ViroFlexView>
@@ -253,7 +291,8 @@ const ARScene2 = () => {
          <ViroFlexView style={styles.displayedReviewBody}>
           
             <ViroText style={styles.displayedReviewBodyText} 
-            text={` ${reviews[reviewIndex].author}  rated  ${reviews[reviewIndex].star_rating} Stars \n ${reviews[reviewIndex].body}`} />
+            text={` ${reviews[index][reviewIndex].author} rated ${reviews[index][reviewIndex].star_rating} Stars \n ${reviews[index][reviewIndex].body}`} 
+            />
 
           </ViroFlexView>
 
