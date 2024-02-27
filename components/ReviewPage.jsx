@@ -63,7 +63,7 @@ const ReviewPage = (venueId) => {
 
   return (
     <ImageBackground
-      source={require("../_media_/background-01.jpg")}
+      source={require("../_media_/layered-steps-haikei.png")}
       style={styles.backgroundImage}
     >
       <View style={styles.container}>
