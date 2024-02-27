@@ -6,6 +6,7 @@ import {
   ViroTrackingStateConstants,
   Viro3DObject,
   ViroAnimations,
+  ViroImage,
 } from "@viro-community/react-viro";
 import Geolocation from "@react-native-community/geolocation";
 import { useNavigation } from "@react-navigation/native";
@@ -186,7 +187,7 @@ const ARScene2 = () => {
           {/*   useState([0, 0, 0]);
         useState([0.1, 0.1, 0.1]); */}
           <Viro3DObject
-            source={require("../assets/binocular/binocular.obj")} // Adjust the path as necessary
+            source={require("../assets/dragon/Dragon.obj")} // Adjust the path as necessary
             // resources={require("../assets/binocular/Blank.mtl")}
             position={[2, 2, -30]} // Use the position prop passed to each Star instance
             scale={[0.025, 0.025, 0.025]} // Adjust scale as necessary
@@ -219,7 +220,13 @@ const ARScene2 = () => {
             {/* THE AVERAGE RATING VISUAL */}
             <ViroFlexView style={styles.displayedReviewAvgRatingVisual}>
               <ViroFlexView style={styles.avg1Star}>
-                <Viro3DObject
+                <ViroImage
+                    position={starPosition} // Use the position prop passed to each Star instance
+                    scale={starScale} // Adjust scale as necessary
+                  placeholderSource={require("../assets/ReviewStar.png")}
+                  source={require("../assets/ReviewStar.png")}
+                />
+                {/* <Viro3DObject
                   source={require("../assets/stars/Star_v3.obj")} // Adjust the path as necessary
                   // resources={require("../assets/stars/Blank.mtl")}
                   position={starPosition} // Use the position prop passed to each Star instance
@@ -227,11 +234,17 @@ const ARScene2 = () => {
                   rotation={[-90, 0, 0]}
                   animation={{ name: "rotate", loop: true, run: true }}
                   type="OBJ" // Assuming the star model is an OBJ file
-                />
+                /> */}
               </ViroFlexView>
               {parseInt(venue.average_star_rating) >= 2 && (
                 <ViroFlexView style={styles.avg2Star}>
-                  <Viro3DObject
+                  <ViroImage
+                    position={starPosition} // Use the position prop passed to each Star instance
+                    scale={starScale} // Adjust scale as necessary
+                    placeholderSource={require("../assets/ReviewStar.png")}
+                    source={require("../assets/ReviewStar.png")}
+                  />
+                  {/* <Viro3DObject
                     source={require("../assets/stars/Star_v3.obj")} // Adjust the path as necessary
                     // resources={require("../assets/stars/Blank.mtl")}
                     position={starPosition} // Use the position prop passed to each Star instance
@@ -239,12 +252,18 @@ const ARScene2 = () => {
                     rotation={[-90, 0, 0]}
                     animation={{ name: "rotate", loop: true, run: true }}
                     type="OBJ" // Assuming the star model is an OBJ file
-                  />
+                  /> */}
                 </ViroFlexView>
               )}
               {parseInt(venue.average_star_rating) >= 3 && (
                 <ViroFlexView style={styles.avg3Star}>
-                  <Viro3DObject
+                  <ViroImage
+                    position={starPosition} // Use the position prop passed to each Star instance
+                    scale={starScale} // Adjust scale as necessary
+                    placeholderSource={require("../assets/ReviewStar.png")}
+                    source={require("../assets/ReviewStar.png")}
+                  />
+                  {/* <Viro3DObject
                     source={require("../assets/stars/Star_v3.obj")} // Adjust the path as necessary
                     // resources={require("../assets/stars/Blank.mtl")}
                     position={starPosition} // Use the position prop passed to each Star instance
@@ -252,12 +271,18 @@ const ARScene2 = () => {
                     rotation={[-90, 0, 0]}
                     animation={{ name: "rotate", loop: true, run: true }}
                     type="OBJ" // Assuming the star model is an OBJ file
-                  />
+                  /> */}
                 </ViroFlexView>
               )}
               {parseInt(venue.average_star_rating) >= 4 && (
                 <ViroFlexView style={styles.avg4Star}>
-                  <Viro3DObject
+                  <ViroImage
+                    position={starPosition} // Use the position prop passed to each Star instance
+                    scale={starScale} // Adjust scale as necessary
+                    placeholderSource={require("../assets/ReviewStar.png")}
+                    source={require("../assets/ReviewStar.png")}
+                  />
+                  {/* <Viro3DObject
                     source={require("../assets/stars/Star_v3.obj")} // Adjust the path as necessary
                     // resources={require("../assets/stars/Blank.mtl")}
                     position={starPosition} // Use the position prop passed to each Star instance
@@ -265,12 +290,18 @@ const ARScene2 = () => {
                     rotation={[-90, 0, 0]}
                     animation={{ name: "rotate", loop: true, run: true }}
                     type="OBJ" // Assuming the star model is an OBJ file
-                  />
+                  /> */}
                 </ViroFlexView>
               )}
               {parseInt(venue.average_star_rating) === 5 && (
                 <ViroFlexView style={styles.avg5Star}>
-                  <Viro3DObject
+                  <ViroImage
+                    position={starPosition} // Use the position prop passed to each Star instance
+                    scale={starScale} // Adjust scale as necessary
+                    placeholderSource={require("../assets/ReviewStar.png")}
+                    source={require("../assets/ReviewStar.png")}
+                  />
+                  {/* <Viro3DObject
                     source={require("../assets/stars/Star_v3.obj")} // Adjust the path as necessary
                     // resources={require("../assets/stars/Blank.mtl")}
                     position={starPosition} // Use the position prop passed to each Star instance
@@ -278,7 +309,7 @@ const ARScene2 = () => {
                     rotation={[-90, 0, 0]}
                     animation={{ name: "rotate", loop: true, run: true }}
                     type="OBJ" // Assuming the star model is an OBJ file
-                  />
+                  /> */}
                 </ViroFlexView>
               )}
             </ViroFlexView>

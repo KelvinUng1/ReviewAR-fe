@@ -251,11 +251,13 @@ buttonBar: {
 
 //ADD REVIEW BUTTON
 addReviewButton: {
+  
   height: 0.5,
-  width: 1.2,
+  width: 1.8,
   backgroundColor: "#545fb2",
 },
 addReviewButtonText: {
+  flex: 1,
   color: "white",
   fontSize: 25,
   fontWeight: "bold",
@@ -263,8 +265,9 @@ addReviewButtonText: {
 },
 //BLANK BUTTON _ANOTHER
 anotherOneButton: {
+  flex: 1,
   height: 0.5,
-  width: 1.5,
+  width: 1.8,
   backgroundColor: "#545fb2",
 
 },
@@ -278,11 +281,12 @@ anotherOneButtonText: {
 //BACK TO TOP BUTTON
 mostRecentReviewButton: {
   height: 0.5,
-  width: 1.5,
+  width: 1.8,
   backgroundColor: "#545fb2",
 
 },
 mostRecentReviewButtonText: {
+  flex: 1,
   color: "white",
   fontSize: 25,
   fontWeight: "bold",
@@ -290,14 +294,16 @@ mostRecentReviewButtonText: {
 },
 //NEXTT BUTTON
 displayedNextReviewButton: {
+
   color: "Blue",
   height: 0.5,
-  width: 1.5,
+  width: 1.8,
   backgroundColor: "#545fb2",
   fontSize: 25,
 },
 displayedReviewNextButtonText: {
   color: "white",
+  flex: 1,
   fontSize: 25,
   fontWeight: "bold",
   textAlign: "center",
