@@ -24,7 +24,7 @@ const ARScene2 = () => {
   const navigation = useNavigation();
   const [text, setText] = useState("Initializing AR...");
   const [position, setPosition] = useState(null);
-  const [radius, setRadius] = useState(30);
+  const [radius, setRadius] = useState(300);
   const [venues, setVenues] = useState([]);
   const [reviewIndex, setReviewIndex] = useState(0);
   const [users, setUsers] = useState([]);
@@ -34,6 +34,7 @@ const ARScene2 = () => {
   const [starIosPosition, setIosStarPosition] = useState([0.1, 0.1, 0.1]);
   const [starPosition, setStarPosition] = useState([0, 0, 0]);
   const [starScale, setStarScale] = useState([0.1, 0.1, 0.1]);
+  const [unfilteredReviews, setUnfilteredReviews] = useState([]);
 
   useEffect(() => {
     fetchVenues()
@@ -69,11 +70,35 @@ const ARScene2 = () => {
         });
         setNearbyVenues(nearbyVenues);
         console.log("Nearby >>> ", nearbyVenues);
-        fetchReviews(nearbyVenues[0].venue_id)
-          .then(({ reviews }) => {
-            setReviews(reviews);
-          })
-          .catch((error) => {});
+
+        //fetch reviews (can get duplicates and unordered)
+        nearbyVenues.forEach((venue) => {
+          fetchReviews(venue.venue_id)
+            .then((res) => {
+              const newReviews = res.reviews;
+              setUnfilteredReviews([...unfilteredReviews, newReviews]);
+            })
+            .catch((error) => {
+              //error handling
+            });
+        });
+        //algorithm that filters duplicate reviews
+        const item_order = nearbyVenues.map((p) => p.venue_id);
+        setReviews(
+          unfilteredReviews
+            .filter(((t = {}), (a) => !(t[a] = a in t)))
+            .slice()
+            .sort((a, b) => {
+              var A = a[0].venue_id,
+                B = b[0].venue_id;
+
+              if (item_order.indexOf(A) > item_order.indexOf(B)) {
+                return 1;
+              } else {
+                return -1;
+              }
+            })
+        );
       }
     };
     fetchVenueData();
@@ -110,22 +135,30 @@ const ARScene2 = () => {
     }
   }
 
+  useEffect(() => {
+    if (reviews.length > nearbyVenues.length){
+      setReviews(
+        reviews.filter((review, index) => reviews.length / 2 > index)
+      )
+    }
+  }, [reviews.length])
+
   // cycle through reviews
-  const onReviewClick = () => {
+  const onReviewClick = (index) => {
     if (reviews.length > 0) {
       const reviewsForVenue = reviews;
       let nextIndex = reviewIndex + 1;
-
-      if (reviewsForVenue && reviewsForVenue.length > 0) {
+      if (reviewsForVenue[index][nextIndex] === undefined && reviewsForVenue.length > 0) {
         nextIndex = nextIndex % reviewsForVenue.length;
       }
       setReviewIndex(nextIndex);
     }
+
   };
 
-  const onClickState = (stateValue, position, source) => {
+  const onClickState = (stateValue, index) => {
     if (stateValue === 3) {
-      onReviewClick();
+      onReviewClick(index);
     }
   };
 
@@ -182,6 +215,7 @@ const ARScene2 = () => {
 
   return (
     <ViroARScene onTrackingUpdated={onInitialized}>
+      {console.log(reviews)}
       {!(nearbyVenues && nearbyVenues.length > 0 && reviews.length > 0) && (
         <>
           <ViroText
@@ -203,7 +237,8 @@ const ARScene2 = () => {
       {nearbyVenues &&
         nearbyVenues.length > 0 &&
         reviews.length > 0 &&
-        nearbyVenues.map((venue, index) => (
+        reviews.length <= nearbyVenues.length &&
+        reviews.map((review, index) => (
           // THE MAIN REVIEW CARD CONTAINER
           <ViroFlexView
             style={styles.venueInfoAndReviewsContainer}
@@ -215,7 +250,7 @@ const ARScene2 = () => {
             <ViroFlexView style={styles.displayedVenueTitleBar}>
               <ViroText
                 style={styles.displayedVenueTitleBarText}
-                text={`${venue.place_name}`}
+                text={`${nearbyVenues[index].place_name}`}
                 position={[0, index * 0.5, -2]}
               />
             </ViroFlexView>
@@ -244,7 +279,7 @@ const ARScene2 = () => {
                   />
                 )}
               </ViroFlexView>
-              {parseInt(venue.average_star_rating) >= 2 && (
+              {parseInt(nearbyVenues[index].average_star_rating) >= 2 && (
                 <ViroFlexView style={styles.avg2Star}>
                   {Platform.OS === "ios" ? (
                     <ViroImage
@@ -268,7 +303,7 @@ const ARScene2 = () => {
                   )}
                 </ViroFlexView>
               )}
-              {parseInt(venue.average_star_rating) >= 3 && (
+              {parseInt(nearbyVenues[index].average_star_rating) >= 3 && (
                 <ViroFlexView style={styles.avg3Star}>
                   {Platform.OS === "ios" ? (
                     <ViroImage
@@ -292,7 +327,7 @@ const ARScene2 = () => {
                   )}
                 </ViroFlexView>
               )}
-              {parseInt(venue.average_star_rating) >= 4 && (
+              {parseInt(nearbyVenues[index].average_star_rating) >= 4 && (
                 <ViroFlexView style={styles.avg4Star}>
                   {Platform.OS === "ios" ? (
                     <ViroImage
@@ -316,7 +351,7 @@ const ARScene2 = () => {
                   )}
                 </ViroFlexView>
               )}
-              {parseInt(venue.average_star_rating) === 5 && (
+              {parseInt(nearbyVenues[index].average_star_rating) === 5 && (
                 <ViroFlexView style={styles.avg5Star}>
                   {Platform.OS === "ios" ? (
                     <ViroImage
@@ -343,10 +378,10 @@ const ARScene2 = () => {
             </ViroFlexView>
 
             {/* THE AVERAGE RATING TEXT BAR */}
-            <ViroFlexView style={[getRatingStyle(venue)]}>
+            <ViroFlexView style={[getRatingStyle(nearbyVenues[index])]}>
               <ViroText
                 style={styles.displayedVenueAvgRatingBarText}
-                text={`Average Rating: ${venue.average_star_rating}, from ${reviews.length} Reviews`}
+                text={`Average Rating: ${nearbyVenues[index].average_star_rating}, from ${review.length} Reviews`}
               />
             </ViroFlexView>
 
@@ -354,7 +389,7 @@ const ARScene2 = () => {
             <ViroFlexView style={styles.displayedReviewBody}>
               <ViroText
                 style={styles.displayedReviewBodyText}
-                text={` ${reviews[reviewIndex].author}  rated  ${reviews[reviewIndex].star_rating} Stars and wrote: \n "${reviews[reviewIndex].body}"`}
+                text={` ${review[reviewIndex].author}  rated  ${review[reviewIndex].star_rating} Stars and wrote: \n "${review[reviewIndex].body}"`}
               />
             </ViroFlexView>
 
@@ -364,7 +399,7 @@ const ARScene2 = () => {
               <ViroFlexView
                 style={styles.addReviewButton}
                 onClickState={() =>
-                  onAddReviewClick(venue.venue_id, venue.place_name)
+                  onAddReviewClick(nearbyVenues[index].venue_id, nearbyVenues[index].place_name)
                 }
               >
                 <ViroText
@@ -395,7 +430,7 @@ const ARScene2 = () => {
               {/* NEXT BUTTON */}
               <ViroFlexView
                 style={styles.displayedNextReviewButton}
-                onClickState={onClickState}
+                onClickState={(stateValue) => {onClickState(stateValue, index)}}
               >
                 <ViroText
                   style={styles.displayedReviewNextButtonText}
