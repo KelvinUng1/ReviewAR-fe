@@ -35,6 +35,28 @@ const ARScene2 = () => {
   const [starPosition, setStarPosition] = useState([0, 0, 0]);
   const [starScale, setStarScale] = useState([0.1, 0.1, 0.1]);
   const [unfilteredReviews, setUnfilteredReviews] = useState([]);
+  const [indexArr, setIndexArr] = useState([0])
+  const [cameraPosition, setCameraPosition] = useState([0, 0, 0]);
+  const [cameraForward, setCameraForward] = useState([0, 0, -1]);
+
+  const onCameraTransformUpdate = (cameraTransform) => {
+    setCameraPosition(cameraTransform.position);
+    setCameraForward(cameraTransform.forward);
+  };
+
+  const objectPositionInFrontOfCamera = (
+    distance,
+    verticalOffset = 0,
+    horizontalOffset = 0
+  ) => {
+    const adjustedPosition = [
+      cameraPosition[0] + cameraForward[0] * distance + horizontalOffset,
+      cameraPosition[1] + cameraForward[1] * distance + verticalOffset,
+      cameraPosition[2] + cameraForward[2] * distance,
+    ];
+
+    return adjustedPosition;
+  };
 
   useEffect(() => {
     fetchVenues()
@@ -99,6 +121,9 @@ const ARScene2 = () => {
               }
             })
         );
+        reviews.forEach((review) => {
+          setIndexArr([...indexArr, 0])
+        })
       }
     };
     fetchVenueData();
@@ -146,14 +171,15 @@ const ARScene2 = () => {
   // cycle through reviews
   const onReviewClick = (index) => {
     if (reviews.length > 0) {
-      const reviewsForVenue = reviews;
       let nextIndex = reviewIndex + 1;
-      if (reviewsForVenue[index][nextIndex] === undefined && reviewsForVenue.length > 0) {
-        nextIndex = nextIndex % reviewsForVenue.length;
+      const newArr = [...indexArr]
+      newArr[index] = indexArr[index] + 1
+      if (typeof reviews[index][newArr[index]] === "undefined") {
+        newArr[index] = 0
       }
+      setIndexArr(newArr)
       setReviewIndex(nextIndex);
     }
-
   };
 
   const onClickState = (stateValue, index) => {
@@ -214,26 +240,38 @@ const ARScene2 = () => {
   });
 
   return (
-    <ViroARScene onTrackingUpdated={onInitialized}>
-      {console.log(reviews)}
-      {!(nearbyVenues && nearbyVenues.length > 0 && reviews.length > 0) && (
+    <ViroARScene
+      onTrackingUpdated={onInitialized}
+      onCameraTransformUpdate={onCameraTransformUpdate}
+    >
+      {!(nearbyVenues && nearbyVenues.length > 0 && reviews.length > 0 && reviews.length === nearbyVenues.length) && (
         <>
           <ViroText
             text="Scanning..."
-            position={[0, 0, -8]}
+            position={objectPositionInFrontOfCamera(10, -1, -1)} // (how far from camera, +above/-below middle, -left/+right)
             style={{ fontSize: 60, color: "white" }}
+            transformBehaviors={["billboard"]}
           />
-          <Viro3DObject
-            source={require("../assets/dragon/Dragon.obj")} // Adjust the path as necessary
-            // resources={require("../assets/binocular/Blank.mtl")}
-            position={[2, 2, -30]} // Use the position prop passed to each Star instance
-            scale={[0.025, 0.025, 0.025]} // Adjust scale as necessary
-            rotation={[-90, 0, 0]}
+          {/* <Viro3DObject
+            source={require("../assets/dish/Dish.obj")}
+            position={objectPositionInFrontOfCamera(15, 1, 0)} // (how far from camera, +above/-below middle, -left/+right)
+            scale={[0.25, 0.25, 0.25]}
+            rotation={[0, 0, 0]}
             animation={{ name: "rotate", loop: true, run: true }}
-            type="OBJ" // Assuming the star model is an OBJ file
+            type="OBJ"
+          /> */}
+          <ViroImage
+            height={3}
+            width={5}
+            position={objectPositionInFrontOfCamera(10, 1, 0)} // bigger number = further away
+            // scale={starScale} // Adjust scale as necessary
+            // placeholderSource={require("../assets/ReviewStar.png")}
+            source={require("../_media_/review-ar-05.png")}
+            transformBehaviors={["billboard"]}
           />
         </>
       )}
+
       {nearbyVenues &&
         nearbyVenues.length > 0 &&
         reviews.length > 0 &&
@@ -390,7 +428,7 @@ const ARScene2 = () => {
             <ViroFlexView style={styles.displayedReviewBody}>
               <ViroText
                 style={styles.displayedReviewBodyText}
-                text={` ${review[reviewIndex].author}  rated  ${review[reviewIndex].star_rating} Stars and wrote: \n "${review[reviewIndex].body}"`}
+                text={` ${review[indexArr[index]].author}  rated  ${review[indexArr[index]].star_rating} Stars and wrote: \n "${review[indexArr[index]].body}"`}
               />
             </ViroFlexView>
 
