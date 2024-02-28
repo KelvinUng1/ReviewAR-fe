@@ -24,7 +24,7 @@ const ARScene2 = () => {
   const navigation = useNavigation();
   const [text, setText] = useState("Initializing AR...");
   const [position, setPosition] = useState(null);
-  const [radius, setRadius] = useState(100);
+  const [radius, setRadius] = useState(300);
   const [venues, setVenues] = useState([]);
   const [reviewIndex, setReviewIndex] = useState(0);
   const [users, setUsers] = useState([]);
@@ -95,6 +95,7 @@ const ARScene2 = () => {
 
         //fetch reviews (can get duplicates and unordered)
         nearbyVenues.forEach((venue) => {
+          setIndexArr([...indexArr, 0])
           fetchReviews(venue.venue_id)
             .then((res) => {
               const newReviews = res.reviews;
@@ -121,9 +122,6 @@ const ARScene2 = () => {
               }
             })
         );
-        reviews.forEach((review) => {
-          setIndexArr([...indexArr, 0])
-        })
       }
     };
     fetchVenueData();
@@ -438,7 +436,7 @@ const ARScene2 = () => {
               <ViroFlexView
                 style={styles.addReviewButton}
                 onClickState={() =>
-                  onAddReviewClick(nearbyVenues[index].venue_id, nearbyVenues[index].place_name)
+                  onAddReviewClick(review[indexArr[index]].venue_id, review[indexArr[index]].place_name)
                 }
               >
                 <ViroText
