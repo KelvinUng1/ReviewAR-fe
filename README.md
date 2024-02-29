@@ -1,7 +1,7 @@
 # ReviewAR
-An mobile application that uses AR technology to display reviews for related nearby venues using your location data.
+An mobile application that uses AR and Geolocation technology to display reviews for related nearby venues.
 
-Repository available for iOS and Android
+Application compatible with iOS and Android
 
 Example:
 -
@@ -13,6 +13,7 @@ Example:
 * React Native - Cross-Platform Mobile Development
 * ViroAR - Cross-Platform AR Development
 * Google Maps API - Geolocation Features
+* [ReviewAR API](https://github.com/kdando/ReviewAR-be) - Backend of ReviewAR
 
 ## Getting Started
 
