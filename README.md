@@ -5,8 +5,7 @@ Repository available for iOS and Android
 
 Example:
 -
-![Short animation of ReviewAR opening scene](https://github.com/KelvinUng1/ReviewAR-fe/assets/122626526/be45bd2a-08b1-4756-bedc-a0bd359e1a4f)
-![Short animation of a user accessing the user select page and selecting a user](https://github.com/KelvinUng1/ReviewAR-fe/assets/122626526/d5fea2b9-34c3-406f-9831-7ec1f63d24c0)
+![Short animation of a user accessing the user select page from the start screen and selecting a user](https://github.com/KelvinUng1/ReviewAR-fe/assets/122626526/d5fea2b9-34c3-406f-9831-7ec1f63d24c0)
 ![Short animation showing an example of a piece of the app's functionality (specifically a screen recording of a user walking up to a location with the loading animation showing and a review popping up in AR view when in the vicinity)](https://github.com/KelvinUng1/ReviewAR-fe/assets/122626526/aab9e2a9-79eb-4a80-a3c8-1eebcc0ab683)
 ![Short animation of user adding a review by selecting a button from the AR camera scene and entering the required information](https://github.com/KelvinUng1/ReviewAR-fe/assets/122626526/c4afba44-c2be-434d-baac-a410e1f9079b)
 
