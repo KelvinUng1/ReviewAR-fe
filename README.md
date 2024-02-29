@@ -53,8 +53,6 @@ npx react-native run-ios
 # Android
 npx react-native run-android
 ```
-> **Note**: Run npx react-native doctor to ensure you have all the required software needed to bundle the app
+> **Note**: Run `npx react-native doctor` to ensure you have all the required software needed to bundle the app
 
-If everything is set up _correctly_, you should see your new app running on you device. 
-
-An ugly AR app with a dragon hiding inside
+If everything is set up _correctly_, you should see your new app running on you device.
