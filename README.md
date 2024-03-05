@@ -1,5 +1,5 @@
 # ReviewAR
-An mobile application that uses AR and Geolocation technology to display reviews for related nearby venues.
+A mobile application that uses AR and Geolocation technology to display reviews for related nearby venues.
 
 Application compatible with iOS and Android
 
