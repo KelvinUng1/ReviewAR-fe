@@ -1,7 +1,7 @@
 # ReviewAR
 A mobile application that uses AR and Geolocation technology to display reviews for related nearby venues.
 
-Application compatible with iOS and Android
+Application compatible with iOS and Android.
 
 Example:
 -
@@ -56,4 +56,4 @@ npx react-native run-android
 ```
 > **Note**: Run `npx react-native doctor` to ensure you have all the required software needed to bundle the app
 
-If everything is set up _correctly_, you should see your new app running on you device.
+If everything is set up _correctly_, you should see your new app running on your device.
